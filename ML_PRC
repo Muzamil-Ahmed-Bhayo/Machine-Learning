@@ -1,0 +1,53 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import svm, datasets
+from sklearn.model_selection import train_test_split
+
+# 1. Generate synthetic data (for visualization)
+X, y = datasets.make_blobs(n_samples=100, centers=2, random_state=6, cluster_std=1.2)
+
+# 2. Split into train/test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# 3. Create an SVM classifier
+model = svm.SVC(kernel='linear', C=1.0)
+
+# 4. Train the model
+model.fit(X_train, y_train)
+
+# 5. Evaluate model accuracy
+accuracy = model.score(X_test, y_test)
+print(f"Model Accuracy: {accuracy*100:.2f}%")
+
+# 6. Plot decision boundary and support vectors
+plt.figure(figsize=(8,6))
+
+# Plot training points
+plt.scatter(X_train[:, 0], X_train[:, 1], c=y_train, cmap=plt.cm.coolwarm, s=30, edgecolors='k', label="Train")
+
+# Get the separating hyperplane
+ax = plt.gca()
+xlim = ax.get_xlim()
+ylim = ax.get_ylim()
+
+# Create grid to evaluate model
+xx = np.linspace(xlim[0], xlim[1], 30)
+yy = np.linspace(ylim[0], ylim[1], 30)
+YY, XX = np.meshgrid(yy, xx)
+xy = np.vstack([XX.ravel(), YY.ravel()]).T
+Z = model.decision_function(xy).reshape(XX.shape)
+
+# Plot decision boundary and margins
+ax.contour(XX, YY, Z, colors='k',
+           levels=[-1, 0, 1], alpha=0.7,
+           linestyles=['--', '-', '--'])
+
+# Plot support vectors
+ax.scatter(model.support_vectors_[:, 0], model.support_vectors_[:, 1],
+           s=100, linewidth=1, facecolors='none', edgecolors='k', label="Support Vectors")
+
+plt.title("SVM Decision Boundary and Support Vectors")
+plt.xlabel("Feature 1")
+plt.ylabel("Feature 2")
+plt.legend()
+plt.show()
