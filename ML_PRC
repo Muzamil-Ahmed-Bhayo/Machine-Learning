@@ -31,8 +31,8 @@ xlim = ax.get_xlim()
 ylim = ax.get_ylim()
 
 # Create grid to evaluate model
-xx = np.linspace(xlim[0], xlim[1], 40)
-yy = np.linspace(ylim[0], ylim[1], 40)
+xx = np.linspace(xlim[0], xlim[1], 30)
+yy = np.linspace(ylim[0], ylim[1], 30)
 YY, XX = np.meshgrid(yy, xx)
 xy = np.vstack([XX.ravel(), YY.ravel()]).T
 Z = model.decision_function(xy).reshape(XX.shape)
